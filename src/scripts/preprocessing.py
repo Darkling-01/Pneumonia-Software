@@ -3,7 +3,7 @@
 import numpy as np
 import os
 import cv2
-
+import matplotlib.pyplot as plt
 
 labels = ['opacity', 'normal']
 # reading larger image size might slow down the process
@@ -35,7 +35,18 @@ train = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumo
 test = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumonia-Software\data\test")
 
 
-def shape():
-    print(train.shape)
+def display_images():
+    # figsize is set in inches
+    plt.figure(figsize=(5, 5))
+    plt.imshow(train[0][0], cmap="hot")
+    plt.title(labels[train[0][1]])
 
+    plt.figure(figsize=(5, 5))
+    plt.imshow(train[-1, 0], cmap="hot")
+    plt.title(labels[train[-1, 1]])
+
+    plt.show()
+
+# data augmentation
+# first to normalize the images and create a training, and test sets
 
