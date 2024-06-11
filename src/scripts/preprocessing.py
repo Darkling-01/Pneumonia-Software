@@ -38,7 +38,7 @@ test = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumon
 def display_images():
     # figsize is set in inches
     plt.figure(figsize=(5, 5))
-    plt.imshow(train[0][0], cmap="hot")
+    plt.imshow(train[0][0], cmap="hot")   # cmap = colormap
     plt.title(labels[train[0][1]])
 
     plt.figure(figsize=(5, 5))
@@ -47,6 +47,26 @@ def display_images():
 
     plt.show()
 
-# data augmentation
+
 # first to normalize the images and create a training, and test sets
+# doing this will help machine learning model for accurate results and
+# better weights
+
+
+x_train = []
+y_train = []
+
+x_test = []
+y_test = []
+
+for feature, label in train:
+    x_train.append(feature)
+    y_train.append(label)
+
+for feature, label in test:
+    x_test.append(feature)
+    y_test.append(label)
+
+# we normalize images to improve contrast and making it better for processing
+
 
