@@ -4,6 +4,8 @@ import numpy as np
 import os
 import cv2
 import matplotlib.pyplot as plt
+import pandas as pd
+
 
 labels = ['opacity', 'normal']
 # reading larger image size might slow down the process
@@ -27,7 +29,7 @@ def load_pneumonia_data(data_dir):
             # if anything fails, the 'except' will print error message
             except Exception as e:
                 print(e)
-
+    # convert images to array to easier in model
     return np.array(data, dtype="object")
 
 
@@ -67,6 +69,16 @@ for feature, label in test:
     x_test.append(feature)
     y_test.append(label)
 
-# we normalize images to improve contrast and making it better for processing
 
+# normalize data
+x_train = np.array(x_train) / 255.0
+x_test = np.array(x_test) / 255.0
+
+# we normalize images to improve contrast and making it better for processing
+# resize data
+x_train = x_train.reshape(-1, img_size, img_size, 1)
+y_train = np.array(y_train)
+
+x_test = x_test.reshape(-1, img_size, img_size, 1)
+y_test = np.array(y_test)
 
