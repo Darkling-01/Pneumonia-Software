@@ -114,18 +114,25 @@ model = keras.models.Sequential([
 
     # padding set to 'same' uses zero padding
     # strides is used to skip some instances
-    keras.layers.add(Conv2D(32, 3, strides=1, padding='same',
-                            activation='relu', input_shape=(150, 150, 1))),
+    keras.layers.Conv2D(32, 3, strides=1, padding='same',
+                        activation='relu', input_shape=(150, 150, 1)),
     # pooling layers goal is to subsample (shrink) the input image to reduce computational load, and the memory usage
-    keras.layers.add(MaxPool2D((2, 2), strides=2, padding='same')),
-    keras.layers.add(Dropout(0.2)),     # using dropout with a rate of 20% each to avoid over-fitting
+    keras.layers.MaxPool2D((2, 2), strides=2, padding='same'),
+    keras.layers.Dropout(0.2),     # using dropout with a rate of 20% each to avoid over-fitting
 
-    keras.layers.add(Conv2D(64, 3, stride=1, padding='same', activation='relu')),
-    keras.layers.add(Dropout(0.2)),
-    keras.layers.add(MaxPool2D((2, 2), strides=2, padding='same')),
+    keras.layers.Conv2D(64, 3, strides=1, padding='same', activation='relu'),
+    keras.layers.Dropout(0.2),
+    keras.layers.MaxPool2D((2, 2), strides=2, padding='same'),
 
-    keras.layers.add()
+    keras.layers.Conv2D(128, 3, strides=1, padding='same', activation='relu'),
+    keras.layers.Dropout(0.2),
+    keras.layers.MaxPool2D((2, 2), strides=2, padding='same'),
 
+    # Flatten() use to transform multi-dimensional feature to single-dimensional vector
+    keras.layers.Flatten(),
+    keras.layers.Dense(units=64, activation='relu'),    # expects a 1D array of features for each instance
+    keras.layers.Dropout(0.2),
+    keras.layers.Dense(units=1, activation='sigmoid')
 
 ])
 
