@@ -110,9 +110,23 @@ datagen.fit(x_train)
 
 
 # creating the model using the sequential API
-model = keras.models.Sequential()
-model.add(Conv2D(32, (3, 3), strides=(1, 1), padding='same', activation='relu', input_shape=(150, 150, 1)))
-model.add(MaxPool2D((2, 2), strides=(2, 2), padding='same'))
-model.add(Dropout(0.2))
+model = keras.models.Sequential([
+
+    # padding set to 'same' uses zero padding
+    # strides is used to skip some instances
+    keras.layers.add(Conv2D(32, 3, strides=1, padding='same',
+                            activation='relu', input_shape=(150, 150, 1))),
+    # pooling layers goal is to subsample (shrink) the input image to reduce computational load, and the memory usage
+    keras.layers.add(MaxPool2D((2, 2), strides=2, padding='same')),
+    keras.layers.add(Dropout(0.2)),     # using dropout with a rate of 20% each to avoid over-fitting
+
+    keras.layers.add(Conv2D(64, 3, stride=1, padding='same', activation='relu')),
+    keras.layers.add(Dropout(0.2)),
+    keras.layers.add(MaxPool2D((2, 2), strides=2, padding='same')),
+
+    keras.layers.add()
+
+
+])
 
 
