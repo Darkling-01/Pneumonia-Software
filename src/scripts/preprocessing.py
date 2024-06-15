@@ -4,17 +4,17 @@ import numpy as np
 import os
 import cv2
 import matplotlib.pyplot as plt
-import tensorflow as tf
 import keras
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout, BatchNormalization
-from keras.models import Sequential
-import pandas as pd
+from keras.optimizers import Adam
 
 
 labels = ['opacity', 'normal']
 # reading larger image size might slow down the process
 img_size = 150
+
+epochs = 14
+batchSize = 32
 
 
 def load_pneumonia_data(data_dir):
@@ -135,5 +135,14 @@ model = keras.models.Sequential([
     keras.layers.Dense(units=1, activation='sigmoid')
 
 ])
+
+# set optimizer
+optimizer = Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999)
+
+# configure the model process before training the model
+model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+
+# fit the model
+history = model.fit(datagen.flow(x_train, y_train, batch_size=batchSize), epochs=epochs)
 
 
