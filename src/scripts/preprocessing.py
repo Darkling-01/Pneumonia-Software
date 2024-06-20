@@ -40,7 +40,7 @@ def load_pneumonia_data(data_dir):
 
 train = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumonia-Software\data\train")
 test = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumonia-Software\data\test")
-
+val = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumonia-Software\data\val")
 
 def display_images():
     # figsize is set in inches
@@ -66,6 +66,10 @@ y_train = []
 x_test = []
 y_test = []
 
+x_val = []
+y_val = []
+
+
 for feature, label in train:
     x_train.append(feature)
     y_train.append(label)
@@ -74,11 +78,15 @@ for feature, label in test:
     x_test.append(feature)
     y_test.append(label)
 
+for feature, label in val:
+    x_val.append(feature)
+    y_val.append(label)
 
 # we normalize images to improve contrast and making it better for processing
 # normalize data
 x_train = np.array(x_train) / 255.0
 x_test = np.array(x_test) / 255.0
+x_val = np.array(x_val) / 255.0
 
 # resize data
 
@@ -90,6 +98,9 @@ y_train = np.array(y_train)
 
 x_test = x_test.reshape(-1, img_size, img_size, 1)
 y_test = np.array(y_test)
+
+x_val = x_val.reshape(-1, img_size, img_size, 1)
+y_val = np.array(y_val)
 
 # create data augmentation
 datagen = ImageDataGenerator(
@@ -143,6 +154,5 @@ optimizer = Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999)
 model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
 
 # fit the model
-history = model.fit(datagen.flow(x_train, y_train, batch_size=batchSize), epochs=epochs)
-
-
+history = model.fit(datagen.flow(x_train, y_train, batch_size=batchSize), epochs=epochs,
+                    validation_data=datagen.flow(x_val, y_val))
