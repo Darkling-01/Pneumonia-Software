@@ -1,7 +1,11 @@
 import sys
+
+import matplotlib
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+import matplotlib.pyplot as plt
+matplotlib.use('Qt5Agg')
 
 
 class MainWindow(QMainWindow):
@@ -22,7 +26,7 @@ class MainWindow(QMainWindow):
         self.textTitle.setStyleSheet("color: white; font-size: 22px;")
 
         self.UiComponents()
-
+        self.DisplayImage()
         # showing all the widgets
         self.show()
 
@@ -37,6 +41,12 @@ class MainWindow(QMainWindow):
 
     def FileDialog(self):
         self.fileDialog = QFileDialog.getOpenFileName(self, "Pick An image", "home/", "Images (*.png *.xpm *.jpeg)")
+
+    def DisplayImage(self):
+        chosen_image = QLabel(self)
+        chosen_image.setPixmap(QPixmap(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumonia-Software\data\test\normal\IM-0003-0001.jpeg"))
+        chosen_image.resize(400, 400)
+        chosen_image.move(500, 500)
 
 
 if __name__ == "__main__":
