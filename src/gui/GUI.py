@@ -33,26 +33,19 @@ class MainWindow(QMainWindow):
         self.image_label = QLabel(self.central_widget)
         self.layout.addWidget(self.image_label)
 
-        # load and display the original image
-        # self.original_image = cv2.imread(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumonia-Software"
-        #                                  r"\data\test\normal\IM-0007-0001.jpeg")
-        # convert color image to 'hot'
-        # self.original_image = cv2.applyColorMap(self.original_image, cv2.COLORMAP_VIRIDIS)
-        # self.display_image(self.original_image)
+        # placeholder for loaded image
+        self.load_image = None
 
         # calling functions
         self.ui_components()
 
-        # placeholder for loaded image
-        self.load_image = None
-
     def ui_components(self):
-        self.load_button = QtWidgets.QPushButton("Select An Image", self.central_widget)
-        # x, y, width, height
-        self.load_button.setGeometry(230,233, 33, 23)
-        self.load_button.setStyleSheet("color: black; background-color: white;")
-        self.load_button.clicked.connect(self.open_file_dialog)
-        self.layout.addWidget(self.load_button)
+        load_button = QtWidgets.QPushButton("Select An Image", self.central_widget)
+
+        load_button.setStyleSheet("color: black; background-color: white;")
+        load_button.setGeometry(654, 73, 100, 30)
+        load_button.clicked.connect(self.open_file_dialog)
+        # self.layout.addWidget(self.load_button)
 
     # create file dialog to open File Explorer
     def open_file_dialog(self):
@@ -66,12 +59,12 @@ class MainWindow(QMainWindow):
             self.load_image = cv2.imread(filename)
 
             if self.load_image is not None:
-                self.display_image(self.load_image)
+                # self.display_image(self.load_image)
+                self.change_color()
             else:
                 print(f"Error loading images from file: {filename}")
 
     def display_image(self, image):
-
         # convert image to QImage
         height, width, channel = image.shape
         bytes_per_line = 3 * width
@@ -80,15 +73,15 @@ class MainWindow(QMainWindow):
 
         # convert QImage to QPixmap and set it to the QLabel
         pixmap = QPixmap.fromImage(qimage)
-        scaled_image = pixmap.scaled(550, 400)
+        scaled_image = pixmap.scaled(550, 400, Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_image)
 
     def change_color(self):
         # convert image to grayscale
         gray_scale = cv2.cvtColor(self.load_image, cv2.COLOR_BGR2GRAY)
-
+        color_mapped_img = cv2.applyColorMap(gray_scale, cv2.COLORMAP_CIVIDIS)
         # display the processed image
-        self.display_image(gray_scale)
+        self.display_image(color_mapped_img)
 
 
 if __name__ == "__main__":
