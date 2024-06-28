@@ -33,6 +33,10 @@ class MainWindow(QMainWindow):
         self.image_label = QLabel(self.central_widget)
         self.layout.addWidget(self.image_label)
 
+        # create QLabel to display filename
+        self.image_name = QLabel(self.central_widget)
+        self.layout.addWidget(self.image_name)
+
         # placeholder for loaded image
         self.load_image = None
 
@@ -46,6 +50,10 @@ class MainWindow(QMainWindow):
         load_button.setGeometry(654, 73, 100, 30)
         load_button.clicked.connect(self.open_file_dialog)
         # self.layout.addWidget(self.load_button)
+
+        image_location = QtWidgets.QLabel("FILENAME: ", self.central_widget)
+        image_location.setStyleSheet("color: white; font-size: 18px;")
+        image_location.setGeometry(24, 190, 120, 25)
 
     # create file dialog to open File Explorer
     def open_file_dialog(self):
