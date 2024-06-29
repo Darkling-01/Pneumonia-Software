@@ -1,11 +1,33 @@
 import sys
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog
 import cv2
 import matplotlib as plt
 import numpy as np
+
+
+class ImageProcessor(QThread):
+    image_processed = pyqtSignal(object)
+
+    def __init__(self, file_location):
+        super().__init__()
+        self.file_location = file_location
+
+    def run(self):
+        image = cv2.imread(self.file_location)
+        if image is not None:
+            # convert image to grayscale
+            grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+            # apply colormap (e.g. viridis)
+            color_mapped_image = cv2.applyColorMap(grayscale, cv2.COLORMAP_VIRIDIS)
+
+            # emit signal with processed image
+            self.image_processed.emit((color_mapped_image, self.file_location))
+        else:
+            print(f"Error loading image from file: {self.file_location}")
 
 
 class MainWindow(QMainWindow):
@@ -35,8 +57,8 @@ class MainWindow(QMainWindow):
 
         # create QLabel to display filename
         self.image_location = QtWidgets.QLabel(self.central_widget)
-        self.image_location.setGeometry(24, 190, 120, 25)
-        self.image_location.setStyleSheet("color: white; font-size: 18px;")
+        self.image_location.setGeometry(24, 400, 520, 35)
+        self.image_location.setStyleSheet("color: white; font-size: 14px;")
 
         # placeholder for loaded image
         self.load_image = None
@@ -57,23 +79,20 @@ class MainWindow(QMainWindow):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
 
-        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Pick An image", "home/",
+        file_location, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Pick An image", "home/",
                                                             "Images (*.png *.xpm *.jpeg)")
-        if filename:
-            print(f"Selected File: {filename}")
-            self.load_image = cv2.imread(filename)
-
-            if self.load_image is not None:
-                # self.display_image(self.load_image)
-                self.change_color()
-            else:
-                print(f"Error loading images from file: {filename}")
+        if file_location:
+            print(f"Selected File: {file_location}")
+            # start image processing thread immediately
+            self.image_processor_thread = ImageProcessor(file_location)
+            self.image_processor_thread.image_processed.connect(self.display_image)
+            self.image_processor_thread.start()
 
     def display_image(self, image):
-        color_mapped_image, filename = image
+        color_mapped_image, file_location = image
 
         # display filename in QLabel
-        self.image_location.setText(f"FILENAME: {filename}")
+        self.image_location.setText(f"FILE LOCATION:\n{file_location}")
 
         # convert image to QImage
         height, width, channel = color_mapped_image.shape
@@ -85,13 +104,6 @@ class MainWindow(QMainWindow):
         pixmap = QPixmap.fromImage(qimage)
         scaled_image = pixmap.scaled(550, 400, Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_image)
-
-    def change_color(self):
-        # convert image to grayscale
-        gray_scale = cv2.cvtColor(self.load_image, cv2.COLOR_BGR2GRAY)
-        color_mapped_img = cv2.applyColorMap(gray_scale, cv2.COLORMAP_CIVIDIS)
-        # display the processed image
-        self.display_image(color_mapped_img)
 
 
 if __name__ == "__main__":
