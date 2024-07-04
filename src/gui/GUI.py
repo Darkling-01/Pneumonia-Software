@@ -51,9 +51,13 @@ class MainWindow(QMainWindow):
         self.textTitle.setStyleSheet("color: white; font-size: 22px;")
         self.layout.addWidget(self.textTitle)
 
-        # create QLabel for displaying image
+        # QLabel for displaying image
         self.image_label = QLabel(self.central_widget)
         self.layout.addWidget(self.image_label)
+
+        # QLabel for display graphs/charts
+        self.chart_label = QLabel(self.central_widget)
+        self.layout.addWidget(self.chart_label)
 
         # create QLabel to display filename
         self.image_location = QtWidgets.QLabel(self.central_widget)
@@ -73,6 +77,9 @@ class MainWindow(QMainWindow):
         load_button.setGeometry(654, 73, 100, 30)
         load_button.clicked.connect(self.open_file_dialog)
         # self.layout.addWidget(self.load_button)
+
+        display_charts = QtWidgets.QLabel("Chart goes here...", self.central_widget)
+
 
     # create file dialog to open File Explorer
     def open_file_dialog(self):

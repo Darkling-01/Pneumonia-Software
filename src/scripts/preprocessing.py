@@ -11,10 +11,6 @@ from keras.optimizers import Adam
 labels = ['normal', 'opacity']
 img_size = 150
 
-DELAY_CAPTION = 1500
-DELAY_BLUR = 100
-MAX_KERNEL_LENGTH = 31
-
 
 def load_pneumonia_data(data_dir):
     # empty object will store dataset(s) when compiled
@@ -29,6 +25,10 @@ def load_pneumonia_data(data_dir):
                 img_arr = cv2.imread(os.path.join(PATH, img), cv2.IMREAD_GRAYSCALE)
                 # resizing the images can improve speed but loses quality
                 resized_arr = cv2.resize(img_arr, (img_size, img_size))
+
+                # calls the function to rotate the images
+                # rotated_arr = image_rotation(resized_arr)
+
                 # adding the corresponding label to each image
                 data.append([resized_arr, class_num])
 
@@ -36,7 +36,7 @@ def load_pneumonia_data(data_dir):
                 print(f"Error: {e}")
 
     # convert images to array to easily process in model
-    return np.array(data, dtype='object')
+    return data
 
 
 # load each dataset
@@ -45,9 +45,26 @@ test = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumon
 val = load_pneumonia_data(r"C:\Users\Alejandro Barragan\PycharmProjects\Pneumonia-Software\data\val")
 
 
-# Gaussian Filter, the most useful but not the fastest
-def smoothing_images(data):
-    for i in range(1, MAX_KERNEL_LENGTH, 2):
-        dst = cv2.GaussianBlur(data, (i, i), 0)
-        return dst
+# ---------------------
+# | data augmentation |
+# ---------------------
+def image_rotation(data):
+    augmented_data = []
+    for image, label in data:
+        augmented_data.append([image, label])
+
+        rotation_90 = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        rotation_180 = cv2.rotate(image, cv2.ROTATE_180)
+        rotation_270 = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+        augmented_data.append([rotation_90, label])
+        augmented_data.append([rotation_180, label])
+        augmented_data.append([rotation_270, label])
+
+        return augmented_data
+
+
+augmented_train = image_rotation(train)
+augmented_test = image_rotation(test)
+augmented_val = image_rotation(val)
 
