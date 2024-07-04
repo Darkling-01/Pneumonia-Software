@@ -29,6 +29,14 @@ class ImageProcessor(QThread):
         else:
             print(f"Error loading image from file: {self.file_location}")
 
+class DataCharts():
+    def __int__(self, charts):
+        super().__init__()
+        self.charts = charts
+
+    def display_charts(self):
+        
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -55,14 +63,14 @@ class MainWindow(QMainWindow):
         self.image_label = QLabel(self.central_widget)
         self.layout.addWidget(self.image_label)
 
-        # QLabel for display graphs/charts
-        self.chart_label = QLabel(self.central_widget)
-        self.layout.addWidget(self.chart_label)
-
         # create QLabel to display filename
         self.image_location = QtWidgets.QLabel(self.central_widget)
         self.image_location.setGeometry(24, 400, 520, 35)
         self.image_location.setStyleSheet("color: white; font-size: 14px;")
+
+        # QLabel for displaying charts
+        self.image_charts = QLabel(self.central_widget)
+        self.layout.addWidget(self.central_widget)
 
         # placeholder for loaded image
         self.load_image = None
@@ -77,9 +85,6 @@ class MainWindow(QMainWindow):
         load_button.setGeometry(654, 73, 100, 30)
         load_button.clicked.connect(self.open_file_dialog)
         # self.layout.addWidget(self.load_button)
-
-        display_charts = QtWidgets.QLabel("Chart goes here...", self.central_widget)
-
 
     # create file dialog to open File Explorer
     def open_file_dialog(self):

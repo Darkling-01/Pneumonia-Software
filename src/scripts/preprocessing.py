@@ -53,10 +53,12 @@ def image_rotation(data):
     for image, label in data:
         augmented_data.append([image, label])
 
+        # create a simple rotation for 90, 180, 270 degrees
         rotation_90 = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
         rotation_180 = cv2.rotate(image, cv2.ROTATE_180)
         rotation_270 = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
+        # each rotation will add the corresponding labels
         augmented_data.append([rotation_90, label])
         augmented_data.append([rotation_180, label])
         augmented_data.append([rotation_270, label])
@@ -64,7 +66,13 @@ def image_rotation(data):
         return augmented_data
 
 
+# establishing the image rotation
 augmented_train = image_rotation(train)
 augmented_test = image_rotation(test)
 augmented_val = image_rotation(val)
+
+# implement a function to enhance blurry images and noises.
+# using the Gaussian Kernel to smooth out the images
+def image_blurring(data):
+
 
