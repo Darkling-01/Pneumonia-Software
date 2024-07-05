@@ -4,7 +4,8 @@ from PyQt5.QtGui import QPixmap, QImage
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog
 import cv2
-import matplotlib as plt
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
 
 
@@ -29,13 +30,30 @@ class ImageProcessor(QThread):
         else:
             print(f"Error loading image from file: {self.file_location}")
 
-class DataCharts():
-    def __int__(self, charts):
-        super().__init__()
-        self.charts = charts
 
-    def display_charts(self):
-        
+class DataCharts(QWidget):
+    def __int__(self, parent=None):
+        super().__init__(parent)
+        self.layout = QVBoxLayout(self)
+
+        # initialize the figure and canvas
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.layout.addWidget(self.canvas)
+
+    def display_pneumonia_charts(self, data):
+        # clear previous plot
+        self.figure.clear()
+
+        # generate charts based on data collected
+        ax = self.figure.subplots(111)
+        ax.bar(['class 1', 'class 2'], data)
+        ax.set_xlabel('Classes')
+        ax.set_ylabel('Counts')
+        ax.set_title('Pneumonia Classes')
+
+        # draw canvas
+        self.canvas.draw()
 
 
 class MainWindow(QMainWindow):
@@ -68,9 +86,13 @@ class MainWindow(QMainWindow):
         self.image_location.setGeometry(24, 400, 520, 35)
         self.image_location.setStyleSheet("color: white; font-size: 14px;")
 
-        # QLabel for displaying charts
-        self.image_charts = QLabel(self.central_widget)
-        self.layout.addWidget(self.central_widget)
+        # initialize DataCharts widget
+        self.data_charts = DataCharts(self.central_widget)
+        self.layout.addWidget(self.data_charts)
+
+        # Example data (replace with train and test data)
+        pneumonia_data = [10, 15]
+        self.data_charts.display_pneumonia_charts(pneumonia_data)
 
         # placeholder for loaded image
         self.load_image = None
