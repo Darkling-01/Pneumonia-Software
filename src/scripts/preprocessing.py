@@ -26,9 +26,6 @@ def load_pneumonia_data(data_dir):
                 # resizing the images can improve speed but loses quality
                 resized_arr = cv2.resize(img_arr, (img_size, img_size))
 
-                # calls the function to rotate the images
-                # rotated_arr = image_rotation(resized_arr)
-
                 # adding the corresponding label to each image
                 data.append([resized_arr, class_num])
 
