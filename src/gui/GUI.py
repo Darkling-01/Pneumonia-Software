@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWid
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import numpy as np
+
+from src.scripts import preprocessing
 
 
 class ImageProcessor(QThread):
@@ -58,8 +59,24 @@ class MainWindow(QMainWindow):
 
         # create QLabel to display filename
         self.image_location = QtWidgets.QLabel(self.central_widget)
-        self.image_location.setGeometry(24, 400, 520, 35)
+        self.image_location.setGeometry(0, 400, 520, 35)
         self.image_location.setStyleSheet("color: white; font-size: 14px;")
+
+        # display information about model, accuracy, tests, and runtime
+        # label for model used to train
+        self.framework_label = QLabel(self.central_widget)
+        self.framework_label.setGeometry(750, 340, 520, 23)
+        self.framework_label.setStyleSheet("color: white; font-size: 18px;")
+
+        # label for accuracy
+        self.model_accuracy = QLabel(self.central_widget)
+        self.model_accuracy.setGeometry(750, 400, 520, 23)
+        self.model_accuracy.setStyleSheet("color: white; font-size: 18px;")
+
+        # label for tests used
+        self.model_test = QLabel(self.central_widget)
+        self.model_test.setGeometry(750, 460, 520, 23)
+        self.model_test.setStyleSheet("color: white; font-size: 18px;")
 
         # placeholder for loaded image
         self.load_image = None
@@ -105,6 +122,13 @@ class MainWindow(QMainWindow):
         pixmap = QPixmap.fromImage(qimage)
         scaled_image = pixmap.scaled(550, 400, Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_image)
+
+    def model_details(self, image):
+        # if image is picked then compile this 'if-statement'
+        if image:
+            self.framework_label.setText(f"FRAMEWORK: KERAS")
+            self.model_accuracy.setText(f"ACCURACY: _____")
+            self.model_test.setText(f"TESTS USED: {preprocessing.augmented_test.shape}")
 
 
 if __name__ == "__main__":
