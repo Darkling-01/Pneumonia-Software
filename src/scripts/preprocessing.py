@@ -60,7 +60,10 @@ def image_rotation(data):
         augmented_data.append([rotation_180, label])
         augmented_data.append([rotation_270, label])
 
-        return augmented_data
+    # convert to numpy array
+    augmented_data = np.array(augmented_data, dtype=object)
+
+    return augmented_data
 
 
 # establishing the image rotation
@@ -68,8 +71,25 @@ augmented_train = image_rotation(train)
 augmented_test = image_rotation(test)
 augmented_val = image_rotation(val)
 
+
 # implement a function to enhance blurry images and noises.
 # using the Gaussian Kernel to smooth out the images
 def image_blurring(data):
+    blur = []
+    for image, label in data:
+        blur.append([image, label])
+        cleaned = cv2.GaussianBlur(image, (5, 5), 0)
+
+        blur.append([cleaned, label])
+
+    blur = np.array(blur, dtype=object)
+
+    return blur
 
 
+blur_train = image_blurring(augmented_train)
+blur_test = image_blurring(augmented_test)
+blue_val = image_rotation(augmented_val)
+
+
+print(blur_train.shape)
