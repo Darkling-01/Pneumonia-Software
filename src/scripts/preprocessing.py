@@ -3,9 +3,6 @@
 import numpy as np
 import os
 import cv2
-import keras
-from keras.preprocessing.image import ImageDataGenerator
-from keras.optimizers import Adam
 
 # global variables
 labels = ['normal', 'opacity']
@@ -92,4 +89,4 @@ blur_test = image_blurring(augmented_test)
 blue_val = image_rotation(augmented_val)
 
 
-print(blur_train.shape)
+# print(blur_train.shape)
