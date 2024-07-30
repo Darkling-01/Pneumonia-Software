@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
 from keras.models import Sequential, Model
-from preprocessing import blur_train, blur_test, blur_val
+from preprocessing import X_train, X_test, y_train, y_test, X_val, y_val
 
 
 class CNN(Model):
@@ -43,9 +43,26 @@ def preprocess_images(images, target_size=(128, 128)):
     return images_normalized
 
 
-images_preprocessed = preprocess_images(blur_train)
-
 model = CNN()
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
+# specify training configuration(optimizer, loss, metrics)
+model.compile(
+    optimizer=keras.optimizers.RMSprop(),     # optimizer
+    # used when there are two or more label classes
+    loss=keras.losses.SparseCategoricalCrossentropy(),
+    # list of metrics to monitor
+    metrics=[keras.metrics.SparseCategoricalCrossentropy()]
+)
+
+# call fit() to train the model by slicing into "batches"
+history = model.fit(
+    X_train,
+    y_train,
+    batch_size=64,
+    epochs=2,
+    # we pass some validation for
+    # monitoring validation loss and metrics
+    # at the end of each epoch
+    validation_data=(X_val, y_val)
+)
 
