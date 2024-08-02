@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
+from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Input
 from keras.models import Sequential, Model
 from preprocessing import X_train, X_test, y_train, y_test, X_val, y_val
 
@@ -23,8 +23,8 @@ class CNN(Model):
         # Output layer with softmax activation for classification
         self.dense2 = Dense(10, activation='softmax')
 
-    def call(self, inputs):
-        x = self.conv1(inputs)
+    def call(self, input_tensor):
+        x = self.conv1(input_tensor)
         x = self.pool1(x)
         x = self.conv2(x)
         x = self.pool2(x)
@@ -43,8 +43,12 @@ def preprocess_images(images, target_size=(128, 128)):
     return images_normalized
 
 
-model = CNN()
+input_layer = Input(shape=(64, 150, 150,))
+x = CNN()(input_layer)
 
+model = Model(inputs=input_layer, outputs=x)
+print(model.summary(expand_nested=True))
+'''
 # specify training configuration(optimizer, loss, metrics)
 model.compile(
     optimizer=keras.optimizers.RMSprop(),     # optimizer
@@ -65,4 +69,4 @@ history = model.fit(
     # at the end of each epoch
     validation_data=(X_val, y_val)
 )
-
+'''
