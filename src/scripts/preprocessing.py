@@ -11,7 +11,7 @@ img_size = 150
 limit = 4000
 
 
-def load_pneumonia_data(data_dir, limit=None):
+def load_pneumonia_data(data_dir, limit_1=None):
     # empty object will store dataset(s) when compiled
     data = []
     # will loop through images in folders labeling them respectfully
@@ -19,7 +19,7 @@ def load_pneumonia_data(data_dir, limit=None):
         PATH = os.path.join(data_dir, label)
         class_num = labels.index(label)
         for img in os.listdir(PATH):
-            if limit and len(data) >= limit:
+            if limit_1 and len(data) >= limit_1:
                 return data
 
             try:
@@ -96,8 +96,8 @@ blurred_val = image_blurring(augmented_val)
 # Convert to arrays for splitting
 def split_features_labels(data):
     images = np.array([item[0] for item in data])
-    labels = np.array([item[1] for item in data])
-    return images, labels
+    classes = np.array([item[1] for item in data])
+    return images, classes
 
 
 X_train, y_train = split_features_labels(blurred_train)

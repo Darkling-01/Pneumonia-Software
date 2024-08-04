@@ -33,40 +33,32 @@ class CNN(Model):
         return self.dense2(x)
 
 
-# technique used to represent categorical data, such as our class labels. Each category is assigned a
-# unique binary code
-# e.g. NORMAL or OPACITY
-def preprocess_images(images, target_size=(128, 128)):
-    images_resized = tf.image.resize(images, target_size)
-    images_normalized = images_resized / 255.0
-
-    return images_normalized
-
-
-input_layer = Input(shape=(64, 150, 150,))
+input_layer = Input(shape=(None, 64, 150, 150))
 x = CNN()(input_layer)
 
 model = Model(inputs=input_layer, outputs=x)
-print(model.summary(expand_nested=True))
-'''
+# print(model.summary(expand_nested=True))
+
 # specify training configuration(optimizer, loss, metrics)
 model.compile(
-    optimizer=keras.optimizers.RMSprop(),     # optimizer
+    optimizer=keras.optimizers.Adam,
     # used when there are two or more label classes
-    loss=keras.losses.SparseCategoricalCrossentropy(),
+    loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
     # list of metrics to monitor
-    metrics=[keras.metrics.SparseCategoricalCrossentropy()]
+    metrics=['accuracy']
 )
 
 # call fit() to train the model by slicing into "batches"
 history = model.fit(
     X_train,
     y_train,
-    batch_size=64,
+    batch_size=256,
     epochs=2,
     # we pass some validation for
     # monitoring validation loss and metrics
     # at the end of each epoch
     validation_data=(X_val, y_val)
 )
-'''
+
+print(history)
+
