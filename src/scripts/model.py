@@ -33,7 +33,10 @@ class CNN(Model):
         return self.dense2(x)
 
 
-input_layer = Input(shape=(None, 64, 150, 150))
+# input shape (150 x 150 with channel)
+# grayscale images use channel: 1
+# RGB images use channel: 3
+input_layer = Input(shape=(150, 150, 1))
 x = CNN()(input_layer)
 
 model = Model(inputs=input_layer, outputs=x)
@@ -41,7 +44,7 @@ model = Model(inputs=input_layer, outputs=x)
 
 # specify training configuration(optimizer, loss, metrics)
 model.compile(
-    optimizer=keras.optimizers.Adam,
+    optimizer=keras.optimizers.RMSprop(),
     # used when there are two or more label classes
     loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
     # list of metrics to monitor
