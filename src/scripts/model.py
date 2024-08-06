@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Input
 from keras.models import Sequential, Model
-from preprocessing import X_train, X_test, y_train, y_test, X_val, y_val
+from src.scripts.preprocessing import X_train, X_test, y_train, y_test, X_val, y_val
 
 
 class CNN(Model):
@@ -33,35 +33,36 @@ class CNN(Model):
         return self.dense2(x)
 
 
-# input shape (150 x 150 with channel)
-# grayscale images use channel: 1
-# RGB images use channel: 3
-input_layer = Input(shape=(150, 150, 1))
-x = CNN()(input_layer)
+def train_model(X_train, y_train, X_val, y_val):
+    # input shape (150 x 150 with channel)
+    # grayscale images use channel: 1
+    # RGB images use channel: 3
+    input_layer = Input(shape=(150, 150, 1))
+    x = CNN()(input_layer)
 
-model = Model(inputs=input_layer, outputs=x)
-# print(model.summary(expand_nested=True))
+    model = Model(inputs=input_layer, outputs=x)
+    # print(model.summary(expand_nested=True))
 
-# specify training configuration(optimizer, loss, metrics)
-model.compile(
-    optimizer=keras.optimizers.RMSprop(),
-    # used when there are two or more label classes
-    loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-    # list of metrics to monitor
-    metrics=['accuracy']
-)
+    # specify training configuration(optimizer, loss, metrics)
+    model.compile(
+        optimizer=keras.optimizers.RMSprop(),
+        # used when there are two or more label classes
+        loss=keras.losses.SparseCategoricalCrossentropy(),
+        # list of metrics to monitor
+        metrics=['accuracy']
+    )
 
-# call fit() to train the model by slicing into "batches"
-history = model.fit(
-    X_train,
-    y_train,
-    batch_size=256,
-    epochs=2,
-    # we pass some validation for
-    # monitoring validation loss and metrics
-    # at the end of each epoch
-    validation_data=(X_val, y_val)
-)
+    # call fit() to train the model by slicing into "batches"
+    history = model.fit(
+        X_train,
+        y_train,
+        batch_size=256,
+        epochs=2,
+        # we pass some validation for
+        # monitoring validation loss and metrics
+        # at the end of each epoch
+        validation_data=(X_val, y_val)
+    )
 
-print(history)
+    return history
 
