@@ -7,6 +7,8 @@ import cv2
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+from src.scripts.preprocessing import X_train, y_train, X_val, y_val
+
 
 class TrainingThread(QThread):
     progress = pyqtSignal(object)   # signal to emit training status
@@ -97,11 +99,21 @@ class MainWindow(QMainWindow):
         self.model_test.setGeometry(750, 520, 520, 23)
         self.model_test.setStyleSheet("color: white; font-size: 18px;")
 
+        self.training_thread = None
+
         # placeholder for loaded image
         self.load_image = None
 
         # calling functions
         self.ui_components()
+
+    def start_training(self):
+        self.training_thread = TrainingThread(X_train, y_train, X_val, y_val)
+        self.training_thread.progress.connect(self.on_training_done)
+        self.training_thread.start()
+
+    def on_training_done(self, history):
+        print("Training Completed -> ", history)
 
     def ui_components(self):
         load_button = QtWidgets.QPushButton("Select An Image", self.central_widget)
@@ -147,7 +159,7 @@ class MainWindow(QMainWindow):
         # if image is picked then compile this 'if-statement'
         if image:
             self.framework_label.setText(f"FRAMEWORK-> KERAS")
-            self.model_accuracy.setText(f"ACCURACY-> ")
+            self.model_accuracy.setText(f"ACCURACY-> {self.on_training_done}")
             self.model_test.setText(f"TESTS USED-> ")
 
 
