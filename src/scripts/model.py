@@ -64,5 +64,7 @@ def train_model(X_train, y_train, X_val, y_val):
         validation_data=(X_val, y_val)
     )
 
-    return history
+    # Return the last accuracy value
+    final_accuracy = history.history['accuracy'][-1] if 'accuracy' in history.history else None
+    return final_accuracy
 

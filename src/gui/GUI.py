@@ -23,9 +23,9 @@ class TrainingThread(QThread):
     def run(self):
         from src.scripts import model    # import here to avoid import errors
         try:
-            history = model.train_model(self.X_train, self.y_train,
+            final_accuracy = model.train_model(self.X_train, self.y_train,
                                         self.X_val, self.y_val)
-            self.progress.emit(history)   # emit the result
+            self.progress.emit(final_accuracy)   # emit the result
 
         except Exception as e:
             print(f"Training Failed -> {e}")
@@ -108,12 +108,19 @@ class MainWindow(QMainWindow):
         self.ui_components()
 
     def start_training(self):
+
+
         self.training_thread = TrainingThread(X_train, y_train, X_val, y_val)
         self.training_thread.progress.connect(self.on_training_done)
         self.training_thread.start()
 
-    def on_training_done(self, history):
-        print("Training Completed -> ", history)
+    def on_training_done(self, accuracy):
+        # update GUI results
+        if accuracy is not None:
+            self.framework_label.setText(f"FRAMEWORK -> Keras")
+            self.model_accuracy.setText(f"ACCURACY -> {accuracy:.2f}")
+        else:
+            self.model_accuracy.setText(f"N/A")
 
     def ui_components(self):
         load_button = QtWidgets.QPushButton("Select An Image", self.central_widget)
@@ -153,23 +160,4 @@ class MainWindow(QMainWindow):
         pixmap = QPixmap.fromImage(qimage)
         scaled_image = pixmap.scaled(550, 400, Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_image)
-        self.model_details(scaled_image)
-
-    def model_details(self, image):
-        # if image is picked then compile this 'if-statement'
-        if image:
-            self.framework_label.setText(f"FRAMEWORK-> KERAS")
-            self.model_accuracy.setText(f"ACCURACY-> {self.on_training_done}")
-            self.model_test.setText(f"TESTS USED-> ")
-
-
-if __name__ == "__main__":
-
-    # create the application object
-    app = QtWidgets.QApplication(sys.argv)
-    # create the instance of window
-    window_1 = MainWindow()
-    window_1.show()
-    # run the program
-    exit(app.exec())
 
