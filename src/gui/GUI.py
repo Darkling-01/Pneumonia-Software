@@ -7,6 +7,8 @@ import cv2
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+# 'about.py' gives a description about the application
+from src.gui import about
 from src.scripts.preprocessing import X_train, y_train, X_val, y_val
 
 
@@ -109,7 +111,6 @@ class MainWindow(QMainWindow):
 
     def start_training(self):
 
-
         self.training_thread = TrainingThread(X_train, y_train, X_val, y_val)
         self.training_thread.progress.connect(self.on_training_done)
         self.training_thread.start()
@@ -129,6 +130,13 @@ class MainWindow(QMainWindow):
         load_button.setGeometry(654, 73, 100, 30)
         load_button.clicked.connect(self.open_file_dialog)
         # self.layout.addWidget(self.load_button)
+
+        # transitions to 'about' window
+        about_button = QtWidgets.QPushButton("About", self.central_widget)
+
+        about_button.setGeometry(1200, 73, 100, 30)
+        about_button.setStyleSheet("color: black; background-color: white;")
+        # about_button.clicked.connect(about)
 
     # create file dialog to open File Explorer
     def open_file_dialog(self):
