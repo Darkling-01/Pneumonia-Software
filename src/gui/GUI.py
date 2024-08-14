@@ -2,13 +2,15 @@ import sys
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, \
+    QStackedWidget
+
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 # 'about.py' gives a description about the application
-from src.gui import about
+from src.gui.about import AboutPage
 from src.scripts.preprocessing import X_train, y_train, X_val, y_val
 
 
@@ -70,6 +72,21 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.layout = QVBoxLayout(self.central_widget)      # lines up widgets vertically
 
+        # create a stacked widget
+        self.stacked_widget = QStackedWidget()
+        self.layout.addWidget(self.stacked_widget)
+
+        # create two pages
+        self.main_page = self.setup_main_page()
+        self.about_page = AboutPage()
+
+        # add pages to stacked widget
+        self.stacked_widget.addWidget(self.main_page)
+        self.stacked_widget.addWidget(self.about_page)
+
+        # show the main page initially
+        self.stacked_widget.setCurrentWidget(self.main_page)
+
         # Title
         self.textTitle = QLabel("Pneumonia Detection", self.central_widget)
         self.textTitle.setAlignment(Qt.AlignHCenter)
@@ -107,7 +124,7 @@ class MainWindow(QMainWindow):
         self.load_image = None
 
         # calling functions
-        self.ui_components()
+        # self.setup_main_page()
 
     def start_training(self):
 
@@ -123,7 +140,9 @@ class MainWindow(QMainWindow):
         else:
             self.model_accuracy.setText(f"N/A")
 
-    def ui_components(self):
+    def setup_main_page(self):
+        main_page = QtWidgets.QWidget()
+
         load_button = QtWidgets.QPushButton("Select An Image", self.central_widget)
 
         load_button.setStyleSheet("color: black; background-color: white;")
@@ -136,7 +155,9 @@ class MainWindow(QMainWindow):
 
         about_button.setGeometry(1200, 73, 100, 30)
         about_button.setStyleSheet("color: black; background-color: white;")
-        # about_button.clicked.connect(about)
+        about_button.clicked.connect(self.show_about_page)
+
+        return main_page
 
     # create file dialog to open File Explorer
     def open_file_dialog(self):
@@ -168,4 +189,7 @@ class MainWindow(QMainWindow):
         pixmap = QPixmap.fromImage(qimage)
         scaled_image = pixmap.scaled(550, 400, Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_image)
+
+    def show_about_page(self):
+        self.stacked_widget.setCurrentWidget(self.about_page)
 
