@@ -2,8 +2,8 @@ import sys
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QFileDialog, \
-    QStackedWidget
+from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QWidget, \
+    QPushButton, QFileDialog, QStackedWidget
 
 import cv2
 import matplotlib.pyplot as plt
@@ -70,11 +70,11 @@ class MainWindow(QMainWindow):
         # create central widget and layout
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
-        self.layout = QVBoxLayout(self.central_widget)      # lines up widgets vertically
+        self.main_layout = QVBoxLayout(self.central_widget)      # lines up widgets vertically
 
         # create a stacked widget
         self.stacked_widget = QStackedWidget()
-        self.layout.addWidget(self.stacked_widget)
+        self.main_layout.addWidget(self.stacked_widget)
 
         # create two pages
         self.main_page = self.setup_main_page()
@@ -89,18 +89,23 @@ class MainWindow(QMainWindow):
 
         # Title
         self.textTitle = QLabel("Pneumonia Detection", self.central_widget)
-        self.textTitle.setAlignment(Qt.AlignHCenter)
         self.textTitle.setStyleSheet("color: white; font-size: 22px;")
-        self.layout.addWidget(self.textTitle)
+
+        self.textTitle.setAlignment(Qt.AlignCenter)
+        self.main_layout.addWidget(self.textTitle)
+
+        # create a layout for the information labels
+        self.info_layout = QVBoxLayout()
+        self.main_layout.addLayout(self.info_layout)
 
         # QLabel for displaying image
         self.image_label = QLabel(self.central_widget)
-        self.layout.addWidget(self.image_label)
+        self.info_layout.addWidget(self.image_label)
 
         # create QLabel to display filename
         self.image_location = QtWidgets.QLabel(self.central_widget)
-        self.image_location.setGeometry(0, 400, 520, 35)
         self.image_location.setStyleSheet("color: white; font-size: 14px;")
+        self.info_layout.addWidget(self.image_location)
 
         # display information about model, accuracy, tests, and runtime
         # label for model used to train
@@ -141,21 +146,26 @@ class MainWindow(QMainWindow):
             self.model_accuracy.setText(f"N/A")
 
     def setup_main_page(self):
-        main_page = QtWidgets.QWidget()
+        main_page = QWidget()
 
-        load_button = QtWidgets.QPushButton("Select An Image", self.central_widget)
+        main_page_layout = QVBoxLayout(main_page)
+        main_page_layout.setSpacing(5)
+        main_page_layout.setContentsMargins(20, 20, 20, 20)
 
+        button_layout = QHBoxLayout()
+
+        load_button = QtWidgets.QPushButton("Select An Image", main_page)
         load_button.setStyleSheet("color: black; background-color: white;")
-        load_button.setGeometry(654, 73, 100, 30)
+        load_button.setFixedSize(100, 30)
         load_button.clicked.connect(self.open_file_dialog)
-        # self.layout.addWidget(self.load_button)
+        button_layout.addWidget(load_button)
 
         # transitions to 'about' window
-        about_button = QtWidgets.QPushButton("About", self.central_widget)
-
-        about_button.setGeometry(1200, 73, 100, 30)
+        about_button = QtWidgets.QPushButton("About", main_page)
         about_button.setStyleSheet("color: black; background-color: white;")
+        about_button.setFixedSize(100, 30)
         about_button.clicked.connect(self.show_about_page)
+        button_layout.addWidget(about_button)
 
         return main_page
 
