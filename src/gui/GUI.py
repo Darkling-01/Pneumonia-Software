@@ -72,6 +72,12 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.main_layout = QVBoxLayout(self.central_widget)      # lines up widgets vertically
 
+        # Title
+        self.textTitle = QLabel("Pneumonia Detection", self.central_widget)
+        self.textTitle.setStyleSheet("color: white; font-size: 22px;")
+        self.textTitle.setAlignment(Qt.AlignCenter)
+        self.main_layout.addWidget(self.textTitle)
+
         # create a stacked widget
         self.stacked_widget = QStackedWidget()
         self.main_layout.addWidget(self.stacked_widget)
@@ -86,13 +92,6 @@ class MainWindow(QMainWindow):
 
         # show the main page initially
         self.stacked_widget.setCurrentWidget(self.main_page)
-
-        # Title
-        self.textTitle = QLabel("Pneumonia Detection", self.central_widget)
-        self.textTitle.setStyleSheet("color: white; font-size: 22px;")
-
-        self.textTitle.setAlignment(Qt.AlignCenter)
-        self.main_layout.addWidget(self.textTitle)
 
         # create a layout for the information labels
         self.info_layout = QVBoxLayout()
@@ -128,9 +127,6 @@ class MainWindow(QMainWindow):
         # placeholder for loaded image
         self.load_image = None
 
-        # calling functions
-        # self.setup_main_page()
-
     def start_training(self):
 
         self.training_thread = TrainingThread(X_train, y_train, X_val, y_val)
@@ -149,8 +145,8 @@ class MainWindow(QMainWindow):
         main_page = QWidget()
 
         main_page_layout = QVBoxLayout(main_page)
-        main_page_layout.setSpacing(5)
-        main_page_layout.setContentsMargins(20, 20, 20, 20)
+        main_page_layout.setSpacing(1)
+        main_page_layout.setContentsMargins(0, 0, 0, 0)
 
         button_layout = QHBoxLayout()
 
@@ -166,6 +162,8 @@ class MainWindow(QMainWindow):
         about_button.setFixedSize(100, 30)
         about_button.clicked.connect(self.show_about_page)
         button_layout.addWidget(about_button)
+
+        main_page_layout.addLayout(button_layout)
 
         return main_page
 
