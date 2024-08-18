@@ -143,12 +143,12 @@ class MainWindow(QMainWindow):
 
     def setup_main_page(self):
         main_page = QWidget()
-
         main_page_layout = QVBoxLayout(main_page)
-        main_page_layout.setSpacing(1)
-        main_page_layout.setContentsMargins(0, 0, 0, 0)
 
+        # create a horizontal layout for buttons
         button_layout = QHBoxLayout()
+        # add stretchable space to push buttons to the center
+        button_layout.addStretch()
 
         load_button = QtWidgets.QPushButton("Select An Image", main_page)
         load_button.setStyleSheet("color: black; background-color: white;")
@@ -163,6 +163,11 @@ class MainWindow(QMainWindow):
         about_button.clicked.connect(self.show_about_page)
         button_layout.addWidget(about_button)
 
+        # add stretchable space to push buttons together
+        button_layout.addStretch()
+
+        main_page_layout.setAlignment(Qt.AlignTop)
+        # add the button layout to the main page layout
         main_page_layout.addLayout(button_layout)
 
         return main_page
