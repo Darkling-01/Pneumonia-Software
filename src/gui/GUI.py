@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
 
         # set background-color
         self.setStyleSheet("background-color: #2c2e30")
-        self.setWindowTitle("Pneumonia Detection")
+        self.main_title = self.setWindowTitle("Pneumonia Detection")
         # set window size (0, 0, width, height)
         self.setGeometry(0, 0, 1400, 900)
 
@@ -204,5 +204,13 @@ class MainWindow(QMainWindow):
         self.image_label.setPixmap(scaled_image)
 
     def show_about_page(self):
+        # hide elements not needed on the about page
+        self.image_location.hide()
+        self.image_label.hide()
+        self.textTitle.hide()
+
+        # show the about page
         self.stacked_widget.setCurrentWidget(self.about_page)
+
+        self.about_page.show()
 
