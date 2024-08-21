@@ -14,6 +14,17 @@ from src.gui.about import AboutPage
 from src.scripts.preprocessing import X_train, y_train, X_val, y_val
 
 
+class BasePage(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.create_central_widget()
+
+    def create_central_widget(self):
+        self.central_widget = QWidget(self)
+        self.setCentralWidget(self.central_widget)
+        self.main_layout = QVBoxLayout(self.central_widget)    # lines up widgets vertically
+
+
 class TrainingThread(QThread):
     progress = pyqtSignal(object)   # signal to emit training status
 
@@ -57,7 +68,7 @@ class ImageProcessor(QThread):
             print(f"Error loading image from file: {self.file_location}")
 
 
-class MainWindow(QMainWindow):
+class MainWindow(BasePage):
     def __init__(self):
         super().__init__()
 
@@ -66,11 +77,6 @@ class MainWindow(QMainWindow):
         self.main_title = self.setWindowTitle("Pneumonia Detection")
         # set window size (0, 0, width, height)
         self.setGeometry(0, 0, 1400, 900)
-
-        # create central widget and layout
-        self.central_widget = QWidget(self)
-        self.setCentralWidget(self.central_widget)
-        self.main_layout = QVBoxLayout(self.central_widget)      # lines up widgets vertically
 
         # Title
         self.textTitle = QLabel("Pneumonia Detection", self.central_widget)
