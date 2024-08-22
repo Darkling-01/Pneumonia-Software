@@ -6,23 +6,11 @@ from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QHBoxLayout, QVBo
     QPushButton, QFileDialog, QStackedWidget
 
 import cv2
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 # 'about.py' gives a description about the application
 from src.gui.about import AboutPage
 from src.scripts.preprocessing import X_train, y_train, X_val, y_val
-
-
-class BasePage(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.create_central_widget()
-
-    def create_central_widget(self):
-        self.central_widget = QWidget(self)
-        self.setCentralWidget(self.central_widget)
-        self.main_layout = QVBoxLayout(self.central_widget)    # lines up widgets vertically
+from .base_page import BasePage
 
 
 class TrainingThread(QThread):
