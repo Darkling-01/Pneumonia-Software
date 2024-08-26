@@ -2,8 +2,8 @@ import sys
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QWidget, \
-    QPushButton, QFileDialog, QStackedWidget
+from PyQt5.QtWidgets import QLabel, QHBoxLayout, QVBoxLayout, QWidget, \
+    QStackedWidget
 
 import cv2
 
@@ -59,6 +59,8 @@ class ImageProcessor(QThread):
 class MainWindow(BasePage):
     def __init__(self):
         super().__init__()
+
+        self.about_page = None
 
         # set background-color
         self.setStyleSheet("background-color: #2c2e30")
