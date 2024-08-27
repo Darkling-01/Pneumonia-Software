@@ -3,10 +3,10 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, \
     QHBoxLayout, QStackedWidget
 from assets.other_resources import descriptions
-from .base_page import BasePage
+# from .base_page import BasePage
+from src.gui.shared import SharedClass
 
-
-class AboutPage(BasePage):
+class AboutPage(SharedClass):
     def __init__(self):
 
         super().__init__()
@@ -23,11 +23,11 @@ class AboutPage(BasePage):
 
         # create two pages
         self.second_page = self.setup_second_page()
-        # self.main_page = self.helper_function()
+        self.main_page = MainWindow()
 
         # add pages to stacked widget
         self.stacked_widget.addWidget(self.second_page)
-        # self.stacked_widget.addWidget(self.main_page)
+        self.stacked_widget.addWidget(self.main_page)
 
         # show the second page initially
         self.stacked_widget.setCurrentWidget(self.second_page)
@@ -42,7 +42,7 @@ class AboutPage(BasePage):
         main_button = QtWidgets.QPushButton("Main Page", second_page)
         main_button.setStyleSheet("color: black; background-color: white;")
         main_button.setFixedSize(100, 30)
-        # main_button.clicked.connect()
+        main_button.clicked.connect(self.show_main_page)
         button_layout.addWidget(main_button)
 
         button_layout.addStretch()
