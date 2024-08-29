@@ -3,34 +3,29 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel, QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, \
     QHBoxLayout, QStackedWidget
 from assets.other_resources import descriptions
-# from .base_page import BasePage
 from src.gui.shared import SharedClass
+
 
 class AboutPage(SharedClass):
     def __init__(self):
-
         super().__init__()
 
         # create description label
-        self.description = QLabel(descriptions.text, self.central_widget)
+        self.description = QLabel(descriptions.text, self)
         self.description.setStyleSheet("color: white; font-size: 18px;")
         self.description.setAlignment(Qt.AlignCenter)
+
         # add the label to horizontal layout
         self.main_layout.addWidget(self.description)
 
-        self.stacked_widget = QStackedWidget()
-        self.main_layout.addWidget(self.stacked_widget)
-
-        # create two pages
+        # create pages
         self.second_page = self.setup_second_page()
-        self.main_page = MainWindow()
 
         # add pages to stacked widget
-        self.stacked_widget.addWidget(self.second_page)
-        self.stacked_widget.addWidget(self.main_page)
+        self.add_widget(self.second_page)
 
         # show the second page initially
-        self.stacked_widget.setCurrentWidget(self.second_page)
+        self.set_current_widget(self.second_page)
 
     def setup_second_page(self):
         second_page = QWidget()
@@ -42,7 +37,7 @@ class AboutPage(SharedClass):
         main_button = QtWidgets.QPushButton("Main Page", second_page)
         main_button.setStyleSheet("color: black; background-color: white;")
         main_button.setFixedSize(100, 30)
-        main_button.clicked.connect(self.show_main_page)
+        # main_button.clicked.connect(self.show_main_page)
         button_layout.addWidget(main_button)
 
         button_layout.addStretch()
