@@ -7,7 +7,7 @@ from src.gui.shared import SharedClass
 
 
 class AboutPage(SharedClass):
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
 
         # create description label
@@ -16,7 +16,9 @@ class AboutPage(SharedClass):
         self.description.setAlignment(Qt.AlignCenter)
 
         # add the label to horizontal layout
+        self.main_layout.addStretch()
         self.main_layout.addWidget(self.description)
+        self.main_layout.addStretch()
 
         # create pages
         self.second_page = self.setup_second_page()
@@ -37,7 +39,7 @@ class AboutPage(SharedClass):
         main_button = QtWidgets.QPushButton("Main Page", second_page)
         main_button.setStyleSheet("color: black; background-color: white;")
         main_button.setFixedSize(100, 30)
-        # main_button.clicked.connect(self.show_main_page)
+        main_button.clicked.connect(self.show_main_page)
         button_layout.addWidget(main_button)
 
         button_layout.addStretch()
@@ -50,8 +52,7 @@ class AboutPage(SharedClass):
 
     def show_main_page(self):
         self.description.hide()
-
-        self.stacked_widget.setCurrentWidget(self.main_page)
+        self.stacked_widget.setCurrentWidget(self.GUI.main_page)
 
         self.main_page.show()
 
