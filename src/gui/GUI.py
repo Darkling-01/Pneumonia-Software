@@ -80,7 +80,7 @@ class MainWindow(BasePage):
 
         # create two pages
         self.main_page = self.setup_main_page()
-        self.about_page = AboutPage()
+        self.about_page = AboutPage(self)
 
         # add pages to stacked widget
         self.stacked_widget.addWidget(self.main_page)

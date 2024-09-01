@@ -10,6 +10,9 @@ class AboutPage(SharedClass):
     def __init__(self, parent=None):
         super().__init__()
 
+        # store reference to parent MainWindow
+        self.main_window = parent
+
         # create description label
         self.description = QLabel(descriptions.text, self)
         self.description.setStyleSheet("color: white; font-size: 18px;")
@@ -21,22 +24,22 @@ class AboutPage(SharedClass):
         self.main_layout.addStretch()
 
         # create pages
-        self.second_page = self.setup_second_page()
+        self.about_page = self.setup_second_page()
 
         # add pages to stacked widget
-        self.add_widget(self.second_page)
+        self.add_widget(self.about_page)
 
         # show the second page initially
-        self.set_current_widget(self.second_page)
+        self.set_current_widget(self.about_page)
 
     def setup_second_page(self):
-        second_page = QWidget()
-        second_page_layout = QVBoxLayout(second_page)
+        about_page = QWidget()
+        second_page_layout = QVBoxLayout(about_page)
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
 
-        main_button = QtWidgets.QPushButton("Main Page", second_page)
+        main_button = QtWidgets.QPushButton("Main Page", about_page)
         main_button.setStyleSheet("color: black; background-color: white;")
         main_button.setFixedSize(100, 30)
         main_button.clicked.connect(self.show_main_page)
@@ -45,14 +48,14 @@ class AboutPage(SharedClass):
         button_layout.addStretch()
 
         second_page_layout.setAlignment(Qt.AlignTop)
-
         second_page_layout.addLayout(button_layout)
 
-        return second_page
+        return about_page
 
     def show_main_page(self):
-        self.description.hide()
-        self.stacked_widget.setCurrentWidget(self.GUI.main_page)
+        if self.main_window:
+            self.description.hide()
+            self.main_window.stacked_widget.setCurrentWidget(self.main_window.main_page)
 
-        self.main_page.show()
+        # self.main_page.show()
 
