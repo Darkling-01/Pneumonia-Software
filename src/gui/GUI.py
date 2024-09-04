@@ -113,13 +113,12 @@ class MainWindow(BasePage):
         self.model_accuracy.setGeometry(750, 460, 520, 23)
         self.model_accuracy.setStyleSheet("color: white; font-size: 18px;")
 
-        # label for tests used
-        self.model_test = QLabel(self.central_widget)
-        self.model_test.setGeometry(750, 520, 520, 23)
-        self.model_test.setStyleSheet("color: white; font-size: 18px;")
+        # display the time it took to compute the model
+        self.training_time = QLabel(self.central_widget)
+        self.training_time.setGeometry(750, 520, 520, 23)
+        self.training_time.setStyleSheet("color: white; font-size: 18px;")
 
         self.training_thread = None
-
         # placeholder for loaded image
         self.load_image = None
 
@@ -129,13 +128,15 @@ class MainWindow(BasePage):
         self.training_thread.progress.connect(self.on_training_done)
         self.training_thread.start()
 
-    def on_training_done(self, accuracy):
+    def on_training_done(self, accuracy, time):
         # update GUI results
         if accuracy is not None:
             self.framework_label.setText(f"FRAMEWORK -> Keras")
             self.model_accuracy.setText(f"ACCURACY -> {accuracy:.2f}")
+            self.training_time.setText(f"RUNTIME-> {time:.2f}")
         else:
             self.model_accuracy.setText(f"N/A")
+            self.training_time.setText(f"N/A")
 
     def setup_main_page(self):
         main_page = QWidget()
@@ -201,12 +202,12 @@ class MainWindow(BasePage):
 
     def show_about_page(self):
         # hide elements not needed on the about page
-        self.image_location.hide()
-        self.image_label.hide()
-        self.textTitle.hide()
+        # self.image_location.hide()
+        # self.image_label.hide()
+        # self.textTitle.hide()
 
         # show the about page
         self.stacked_widget.setCurrentWidget(self.about_page)
 
-        self.about_page.show()
+        # self.about_page.show()
 

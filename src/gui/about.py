@@ -16,7 +16,7 @@ class AboutPage(SharedClass):
         # create description label
         self.description = QLabel(descriptions.text, self)
         self.description.setStyleSheet("color: white; font-size: 18px;")
-        self.description.setAlignment(Qt.AlignCenter)
+        self.description.setAlignment(Qt.AlignLeft)
 
         # add the label to horizontal layout
         self.main_layout.addStretch()
@@ -54,8 +54,5 @@ class AboutPage(SharedClass):
 
     def show_main_page(self):
         if self.main_window:
-            self.description.hide()
             self.main_window.stacked_widget.setCurrentWidget(self.main_window.main_page)
-
-        # self.main_page.show()
 

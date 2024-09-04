@@ -3,6 +3,7 @@ from tensorflow import keras
 from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Input
 from keras.models import Sequential, Model
 from src.scripts.preprocessing import X_train, X_test, y_train, y_test, X_val, y_val
+from datetime import datetime as dt
 
 
 class CNN(Model):
@@ -68,3 +69,17 @@ def train_model(X_train, y_train, X_val, y_val):
     final_accuracy = history.history['accuracy'][-1] if 'accuracy' in history.history else None
     return final_accuracy
 
+
+# compute how long it takes the training model to finish
+def training_time(X_train, y_train, X_val, y_val):
+    start = dt.now()
+    # process the model time
+    final_accuracy = train_model(X_train, y_train, X_val, y_val)
+    end = dt.now()
+    running_secs = (end - start).total_seconds()
+
+    return final_accuracy, running_secs
+
+
+accuracy, duration = training_time(X_train, y_train, X_val, y_val)
+print(f"Training Time: {duration:.2f} seconds")
