@@ -11,6 +11,7 @@ import cv2
 from src.gui.about import AboutPage
 from src.scripts.preprocessing import X_train, y_train, X_val, y_val
 from .base_page import BasePage
+from src.scripts import model
 
 
 class TrainingThread(QThread):
@@ -133,7 +134,7 @@ class MainWindow(BasePage):
         if accuracy is not None:
             self.framework_label.setText(f"FRAMEWORK -> Keras")
             self.model_accuracy.setText(f"ACCURACY -> {accuracy:.2f}")
-            self.training_time.setText(f"RUNTIME-> {time:.2f}")
+            self.training_time.setText(f"RUNTIME-> {time:.2f} seconds")
         else:
             self.model_accuracy.setText(f"N/A")
             self.training_time.setText(f"N/A")
@@ -199,6 +200,11 @@ class MainWindow(BasePage):
         pixmap = QPixmap.fromImage(qimage)
         scaled_image = pixmap.scaled(550, 400, Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_image)
+
+        # testing until the actual detection of image function is complete..
+        new_accuracy = model.accuracy * 100
+
+        self.on_training_done(new_accuracy, model.duration)
 
     def show_about_page(self):
         # hide elements not needed on the about page

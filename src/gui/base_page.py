@@ -2,7 +2,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout
 
-# this
 
 class BasePage(QMainWindow):
     def __init__(self):
