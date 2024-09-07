@@ -1,9 +1,13 @@
 import tensorflow as tf
 from tensorflow import keras
 from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Input
-from keras.models import Sequential, Model
+from keras.models import Sequential, Model, load_model
+from keras.preprocessing import image
+
 from src.scripts.preprocessing import X_train, X_test, y_train, y_test, X_val, y_val
+
 from datetime import datetime as dt
+import numpy as np
 
 
 class CNN(Model):
@@ -82,4 +86,18 @@ def training_time(X_train, y_train, X_val, y_val):
 
 
 accuracy, duration = training_time(X_train, y_train, X_val, y_val)
-print(f"Training Time: {duration:.2f} seconds")
+# print(f"Training Time: {duration:.2f} seconds")
+
+
+def preprocess_image(img_path, target_size=(150, 150)):
+    # preprocess the input image suitable for model prediction
+    img = load_model(img_path, target_size=target_size, color_mode='grayscale')
+    img_array = image.img_to_array(img)
+    img_array = np.append(img_array, axis=0)    # add batch dimension
+    img_array = img_array / 255
+
+    return img_array
+
+def predict_image(img_path, model):
+    
+
