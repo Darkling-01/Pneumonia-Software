@@ -98,6 +98,15 @@ def preprocess_image(img_path, target_size=(150, 150)):
 
     return img_array
 
+
 def predict_image(img_path, model):
-    
+    # predict the class of input image using the trained model
+    preprocessed_image = preprocess_image(img_path)
+    predictions = model.predict(preprocessed_image)
+    # get the index of the highest probability
+    predicted_class = np.argmax(predictions, axis=1)
+
+    class_labels = {0: 'Healthy', 1: 'Pneumonia'}
+
+    return class_labels.get(predicted_class[0], 'Unknown')
 
