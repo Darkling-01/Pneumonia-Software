@@ -4,7 +4,7 @@ from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Input
 from keras.models import Sequential, Model, load_model
 from keras.preprocessing import image
 
-from src.scripts.preprocessing import X_train, X_test, y_train, y_test, X_val, y_val
+from src.scripts.preprocessing import X_train, y_train, X_val, y_val
 
 from datetime import datetime as dt
 import numpy as np
@@ -69,6 +69,8 @@ def train_model(X_train, y_train, X_val, y_val):
         validation_data=(X_val, y_val)
     )
 
+    # save model
+    model.save('model.h5')
     # Return the last accuracy value
     final_accuracy = history.history['accuracy'][-1] if 'accuracy' in history.history else None
     return final_accuracy
@@ -87,6 +89,10 @@ def training_time(X_train, y_train, X_val, y_val):
 
 accuracy, duration = training_time(X_train, y_train, X_val, y_val)
 # print(f"Training Time: {duration:.2f} seconds")
+
+
+def load_trained_model():
+    return load_model('model.h5')
 
 
 def preprocess_image(img_path, target_size=(150, 150)):
