@@ -119,6 +119,8 @@ class MainWindow(BasePage):
         self.training_time.setGeometry(750, 520, 520, 23)
         self.training_time.setStyleSheet("color: white; font-size: 18px;")
 
+        self.model = model.load_trained_model()
+
         self.training_thread = None
         # placeholder for loaded image
         self.load_image = None
@@ -184,7 +186,16 @@ class MainWindow(BasePage):
             self.image_processor_thread.image_processed.connect(self.display_image)
             self.image_processor_thread.start()
 
-    def display_image(self, image):
+            # preprocess image
+            img_array = model.preprocess_image(file_location)
+
+            # predict
+            prediction = model.predict_image(img_array, self.model)
+
+            # display image and prediction
+            self.display_image(file_location, prediction)
+
+    def display_image(self, image, prediction):
         color_mapped_image, file_location = image
 
         # display filename in QLabel
@@ -201,10 +212,7 @@ class MainWindow(BasePage):
         scaled_image = pixmap.scaled(550, 400, Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_image)
 
-        # testing until the actual detection of image function is complete..
-        new_accuracy = model.accuracy * 100
-
-        self.on_training_done(new_accuracy, model.duration)
+        self.on_training_done(prediction, 2)
 
     def show_about_page(self):
         # hide elements not needed on the about page
